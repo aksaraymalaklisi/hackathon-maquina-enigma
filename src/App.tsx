@@ -3,11 +3,9 @@ import {
   BookOpen,
   Copy,
   KeyRound,
-  Layers,
   QrCode,
   RotateCcw,
   Shield,
-  Smartphone,
   Volume2,
   VolumeX,
 } from 'lucide-react'
@@ -30,7 +28,6 @@ import { SignalPathVisualizer } from './ui/components/SignalPathVisualizer'
 import { QrCodeTransport } from './ui/components/QrCodeTransport'
 import { ModernComparisonPanel } from './ui/components/ModernComparisonPanel'
 import { KeySheetModal } from './ui/components/KeySheetModal'
-import { Enigma3DScene } from './ui/scene/Enigma3DScene'
 import { useEnigmaAudio } from './ui/hooks/useEnigmaAudio'
 
 export default function App() {
@@ -48,7 +45,6 @@ export default function App() {
 
   // Estados de Interface e Cifragem
   const [isLidOpen, setIsLidOpen] = useState(false)
-  const [is3DMode, setIs3DMode] = useState(false) // Padrão Modo Leve para performance máxima
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [activeLampChar, setActiveLampChar] = useState<string | null>(null)
   const [pressedKey, setPressedKey] = useState<string | null>(null)
@@ -286,11 +282,6 @@ export default function App() {
     setLastOutputChar(null)
   }
 
-  const currentPositions: [string, string, string] = [
-    rotors[0].position,
-    rotors[1].position,
-    rotors[2].position,
-  ]
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between selection:bg-amber-500/30 selection:text-amber-200">
@@ -311,22 +302,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* Controles de Topo: 3D vs 2.5D, Áudio e ID */}
+          {/* Controles de Topo: Áudio e ID */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setIs3DMode(!is3DMode)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border ${
-                is3DMode
-                  ? 'bg-amber-500 text-zinc-950 border-amber-400 shadow-md'
-                  : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-zinc-200'
-              }`}
-              title="Alternar entre Visualização 3D e Modo Leve (2.5D)"
-            >
-              {is3DMode ? <Layers className="w-3.5 h-3.5" /> : <Smartphone className="w-3.5 h-3.5" />}
-              <span>{is3DMode ? '3D WebGL' : 'Modo Leve'}</span>
-            </button>
-
             <button
               type="button"
               onClick={() => setSoundEnabled(!soundEnabled)}
@@ -405,16 +382,6 @@ export default function App() {
         {/* ABA 1: Máquina Enigma Imersiva */}
         {activeTab === 'ENIGMA' && (
           <div className="space-y-6">
-            {/* Visualização 3D opcional ou Modo Leve */}
-            {is3DMode && (
-              <Enigma3DScene
-                rotorPositions={currentPositions}
-                activeChar={activeLampChar}
-                pressedKey={pressedKey}
-                onKeyPress={handleCharInput}
-              />
-            )}
-
             {/* Baia de Rotores e Tampa */}
             <RotorBay
               rotors={rotors}
