@@ -56,6 +56,7 @@ export default function App() {
   const [ciphertext, setCiphertext] = useState<string>('')
   const [signalSteps, setSignalSteps] = useState<SignalPathStep[]>([])
   const [lastInputChar, setLastInputChar] = useState<string | null>(null)
+  const [lastOutputChar, setLastOutputChar] = useState<string | null>(null)
 
   // Criptografia Moderna
   const [modernPassphrase, setModernPassphrase] = useState<string>('ENIGMA_NET_AES_KEY_2026')
@@ -139,6 +140,7 @@ export default function App() {
       setTimeout(() => setActiveLampChar(null), 500)
 
       setLastInputChar(char)
+      setLastOutputChar(result.char)
       setSignalSteps(result.signalPath)
 
       // Atualiza posições dos rotores refletindo o avanço mecânico
@@ -280,6 +282,8 @@ export default function App() {
     setCiphertext('')
     setSignalSteps([])
     setActiveLampChar(null)
+    setLastInputChar(null)
+    setLastOutputChar(null)
   }
 
   const currentPositions: [string, string, string] = [
@@ -441,7 +445,7 @@ export default function App() {
             <SignalPathVisualizer
               steps={signalSteps}
               inputChar={lastInputChar}
-              outputChar={activeLampChar}
+              outputChar={lastOutputChar}
             />
 
             {/* Caixas de Texto com Registro em Tempo Real */}
