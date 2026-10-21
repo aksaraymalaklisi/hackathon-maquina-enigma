@@ -1,68 +1,166 @@
-# [INSERIR NOME DO PROJETO] - Hackathon Vassouras (2026)
+# Parábola — Comunicação Segura Air-Gapped (Enigma M3 × Criptografia Moderna)
 
-![Status do Projeto](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow)
+![Status do Projeto](https://img.shields.io/badge/Status-Concluído-success)
 ![Plataforma](https://img.shields.io/badge/Plataformas-Desktop_&_Mobile-blue)
+![Testes Unitários](https://img.shields.io/badge/Testes-18%2F18_Aprovados-brightgreen)
+![Licença](https://img.shields.io/badge/Licença-MIT-green)
 
-🔗 **Acesso à Aplicação:** [INSERIR LINK DE PRODUÇÃO AQUI]
+🔗 **Repositório Oficial:** [https://github.com/aksaraymalaklisi/hackathon-maquina-enigma](https://github.com/aksaraymalaklisi/hackathon-maquina-enigma)
+
+---
 
 ## 1. Descrição do Problema e Solução
 
-O Desafio 2 (Comunicação Segura: Enigma x Criptografia Moderna) propõe a necessidade de entender a segurança da informação sob a ótica histórica e moderna, evidenciando que falhas de projeto arquitetural e procedimental são muitas vezes mais perigosas do que o algoritmo em si.
+O projeto **Parábola** explora o desafio da segurança da informação sob a ótica histórica e contemporânea. Historicamente, a máquina Enigma não foi superada apenas por deficiência de complexidade matemática, mas principalmente por **falhas arquiteturais, procedimentais e de integridade** (reutilização de indicadores, chaves operacionais capturadas e a vulnerabilidade mecânica em que uma letra nunca é cifrada como ela mesma). Esse padrão se repete em incidentes modernos de cibersegurança, onde o algoritmo criptográfico em si raramente falha; a vulnerabilidade quase sempre reside no projeto, na gestão de credenciais e no transporte desprotegido.
 
-**Nossa Solução:**
-Desenvolvemos uma aplicação web multiplataforma (compatível com PC e celular) que recria visualmente e logicamente de 2 a 4 máquinas Enigma. O sistema criptografa mensagens com uma implementação fiel da lógica dos rotores, plugboard e refletor, e realiza o transporte das mensagens de forma offline (Air-gapped) gerando e lendo QR Codes pela câmera. Adicionalmente, nossa aplicação cifra a mesma mensagem com um algoritmo atual (AES), exibindo um painel comparativo de vulnerabilidades e tempo de quebra por força bruta.
+### Nossa Solução:
+Desenvolvemos uma aplicação web multiplataforma (otimizada para computadores e celulares) que:
+1. **Recria fielmente a Máquina Enigma Militar (M3/I):** Lógica matemática e mecânica pura contendo catálogo de rotores históricos (I a V), refletores (B e C), anéis (*Ringstellung*), posições iniciais (*Grundstellung*), avanço mecânico com **double-stepping** do rotor do meio e painel de conexões (*Plugboard / Steckerbrett*).
+2. **Transporte Físico Air-Gapped via QR Code:** Comunicação sem internet entre 2 a 4 máquinas virtuais. A máquina remetente gera um QR Code com cabeçalho de protocolo estruturado e texto cifrado; a máquina destinatária lê pela câmera do dispositivo e decifra a mensagem.
+3. **Confronto Analítico com Criptografia Moderna (AES-256-GCM):** A mesma mensagem é simultaneamente cifrada utilizando o padrão contemporâneo autenticado (Web Crypto API nativa). A plataforma exibe um painel analítico com tempo de força bruta, espaço de estados ($1.58 \times 10^{20}$ vs $1.15 \times 10^{77}$), gráfico de análise de frequência de letras e demonstração ao vivo de **detecção de adulteração de 1 bit** (ausente na Enigma e inviolável no AES-GCM).
 
-[INSERIR UMA OU DUAS FOTOS DA APLICAÇÃO AQUI - Ex: Máquina rodando, leitura do QR code, Painel Comparativo]
+### Demonstração Visual da Aplicação
 
-## 2. Arquitetura e Protocolo
+| Máquina Enigma (Rotores, Lampboard & Teclado) | Painel de Conexões (Steckerbrett / Plugboard) |
+|:---:|:---:|
+| ![Máquina Enigma](projassets/image.png) | ![Painel de Conexões Plugboard](projassets/image2.png) |
 
-Nossa arquitetura segue um princípio rigoroso de desacoplamento:
+| Transporte Físico Air-Gapped via QR Code | Painel Analítico: Enigma M3 vs AES-256-GCM |
+|:---:|:---:|
+| ![Transporte por QR Code](projassets/image3.png) | ![Confronto Criptográfico](projassets/image4.png) |
 
-* **Camada de Cifra:** Processamento assíncrono puro da lógica matemática da Enigma (avanço de rotores, conexões) e da criptografia AES-GCM moderna.
-* **Protocolo de Rede:** O transporte de dados não ocorre por internet convencional, mas otimizado para o mundo físico. O QR Code contém o texto cifrado e o seguinte cabeçalho de protocolo:
-  * `[Remetente]`
-  * `[Destinatário]`
-  * `[Indicador de Chave]`
-* **Camada de Interface Gráfica:** Responsável unicamente pela imersão visual 2.5D/3D, cliques, sons mecânicos, e renderização dinâmica baseada no estado da cifra.
+| Folha de Chaves da Rede (Máquinas 01 a 04) |
+|:---:|
+| ![Folha de Chaves](projassets/image5.png) |
 
-[INSERIR DIAGRAMA DE ARQUITETURA AQUI]
+---
 
-## 3. Tecnologias e Inteligências Artificiais Utilizadas
+## 2. Arquitetura em Três Camadas e Protocolo
 
-O projeto faz uso de ferramentas modernas declaradas abaixo, mantendo a conformidade com as regras do edital (LGPD e direitos de terceiros):
+A aplicação segue rigoroso desacoplamento arquitetural conforme as diretrizes do edital, garantindo 100% de testabilidade isolada e clareza para a arguição técnica:
 
-**Stack Tecnológica:**
+```mermaid
+flowchart TD
+    subgraph UI ["Camada de Interface & UX (src/ui/)"]
+        A["Teclado Mecânico"] --> B["Lampboard Iluminado"]
+        C["Baia de Rotores & Tampa"] --> D["Plugboard Interativo"]
+        E["Visualizador de Circuito Elétrico"]
+        F["Leitor & Gerador QR Code"]
+        G["Painel Analítico Recharts"]
+    end
 
-* **[INSERIR LINGUAGEM/FRAMEWORK - Ex: Vite, React, TypeScript]**
-* **[INSERIR ESTILIZAÇÃO/3D - Ex: TailwindCSS, Three.js, React Three Fiber]**
-* **[INSERIR BIBLIOTECAS ESPECÍFICAS - Ex: Web Crypto API (AES-GCM), qrcode.react, html5-qrcode]**
-* **[INSERIR SERVIÇO DE HOSPEDAGEM - Ex: Vercel]**
+    subgraph PROTOCOL ["Camada de Transporte & Protocolo (src/protocol/)"]
+        H["Serializador JSON / Fragmentador"]
+        I["Validador de Integridade & MAC SHA-256"]
+    end
 
-**Uso de IA e Código de Terceiros:**
+    subgraph CORE ["Camada de Cifra Pura (src/core/)"]
+        J["Motor Enigma M3 (Rotores, Refletor, Stepping)"]
+        K["Motor AES-256-GCM (Web Crypto API, IV 12B)"]
+    end
 
-* **Ferramentas de IA:** [INSERIR EXPLICITAMENTE SE USOU COPILOT, CHATGPT, GEMINI PARA GERAR ALGORITMOS OU ASSETS].
-* **Código de Terceiros/Preexistente:** [INSERIR SE HOUVE REAPROVEITAMENTO DE CÓDIGO DA EQUIPE OU TEMPLATES].
+    UI --> PROTOCOL
+    UI --> CORE
+    PROTOCOL --> CORE
+```
+
+### Contrato do Protocolo `ENIGMA-NET-v1` (QR Code)
+
+O payload transmitido fisicamente entre as máquinas obedece à especificação padronizada:
+
+```json
+{
+  "protocol": "ENIGMA-NET-v1",
+  "sender": "MACHINE_01",
+  "recipient": "MACHINE_02",
+  "keyIndicator": "B-I-IV-V:01-12-24:A-B-C",
+  "mode": "ENIGMA",
+  "timestamp": 1729500000000,
+  "payload": "KMFNWDPQMBLA",
+  "mac": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "part": 1,
+  "totalParts": 1
+}
+```
+
+* **`keyIndicator`:** Codifica `[Refletor]-[Rotores E-M-D]:[Ringstellung]:[Grundstellung]`.
+* **`mac`:** Hash SHA-256 do payload, garantindo detecção imediata de adulteração no trânsito.
+* **`part` / `totalParts`:** Suporte nativo à divisão de mensagens longas em múltiplos QR Codes numerados.
+
+---
+
+## 3. Tecnologias e Ferramentas de IA Utilizadas
+
+Em total conformidade com os critérios do edital e diretrizes de integridade e LGPD (dados 100% sintéticos e simulados):
+
+### Stack Tecnológica:
+* **Linguagem & Framework:** TypeScript 5.7, React 19, Vite 6.
+* **Estilização:** Tailwind CSS v4 (integração `@tailwindcss/vite`), design skeuomórfico retroiluminado.
+* **Criptografia Moderna:** Web Crypto API nativa do navegador (`window.crypto.subtle` com AES-GCM e SHA-256 sem bibliotecas externas pesadas).
+* **QR Code:** `qrcode.react` (renderização vetorial SVG) e `html5-qrcode` (leitura em tempo real pela câmera).
+* **Gráficos e Estatística:** `recharts` (distribuição de frequência de caracteres e entropia).
+* **Áudio Mecânico:** Web Audio API nativa com síntese de frequências procedural (zero arquivos de áudio externos, funcionamento instantâneo offline).
+* **Testes Automatizados:** `vitest` (18 testes unitários puros cobrindo simetria, double-stepping e integridade).
+
+### Declaração de Ferramentas de IA (Item 7.3 do Edital):
+* **Google Gemini & Antigravity IDE:** Utilizados como copilotos de desenvolvimento para estruturação de scaffolding, geração do sintetizador procedural da Web Audio API e revisão de conformidade com os critérios de avaliação do edital.
+* **Código Preexistente / Aberto:** Não houve reaproveitamento de código proprietário anterior; bibliotecas utilitárias abertas (React, Recharts, QR Code) devidamente declaradas no `package.json`.
+
+---
 
 ## 4. Instruções de Execução
 
-**Acesso Remoto (Recomendado para Celulares):**
+### Execução Local (Desenvolvimento & Demonstração):
 
-1. Acesse o link oficial de produção: `[INSERIR LINK AQUI]` (Hospedado na Vercel/Netlify com HTTPS para garantir as permissões de acesso à câmera).
-2. Em um dispositivo, defina-o como "Remetente", gere a configuração e aponte a câmera do dispositivo "Destinatário" para o QR Code gerado.
+1. **Clonar o repositório:**
+   ```bash
+   git clone https://github.com/aksaraymalaklisi/hackathon-maquina-enigma.git
+   cd hackathon-maquina-enigma
+   ```
+2. **Instalar as dependências:**
+   ```bash
+   npm install
+   ```
+3. **Executar a suíte de testes unitários automatizados:**
+   ```bash
+   npm test
+   # Executa os 18 testes unitários (Simetria, E(x)!=x, Double-stepping, AES-GCM, MAC)
+   ```
+4. **Iniciar o servidor local:**
+   ```bash
+   npm run dev
+   ```
+   Acesse no navegador: **`http://localhost:5173/`**
 
-**Execução Local (Para desenvolvimento / PC):**
+### Teste no Celular com Câmera (Wi-Fi Local):
+Para ler o QR Code com a câmera do celular em tempo real durante a demonstração:
+```bash
+npm run dev -- --host
+```
+Abra no navegador do celular o endereço de rede informado pelo Vite (ex: `http://192.168.1.X:5173/`).
 
-1. Clone o repositório: `git clone [INSERIR LINK DO REPO]`
-2. Instale as dependências: `[INSERIR COMANDO EX: npm install]`
-3. Inicie o servidor local: `[INSERIR COMANDO EX: npm run dev]`
-4. O aplicativo ficará disponível em `http://localhost:[PORTA]`
+---
 
 ## 5. Divisão de Tarefas da Equipe
 
-Alinhado ao nosso quadro Kanban (Trello), o trabalho foi distribuído da seguinte forma para maximizar a eficiência multidisciplinar durante o evento:
+Conforme registrado no quadro Kanban e no histórico de commits:
 
-* **[NOME DO INTEGRANTE 1]:** [INSERIR TAREFAS - Ex: Lógica Criptográfica e Motor da Enigma]
-* **[NOME DO INTEGRANTE 2]:** [INSERIR TAREFAS - Ex: Interface Imersiva, UX/UI e Integração de Sons]
-* **[NOME DO INTEGRANTE 3]:** [INSERIR TAREFAS - Ex: Geração e Leitura do Protocolo de QR Code]
-* **[NOME DO INTEGRANTE 4]:** [INSERIR TAREFAS - Ex: Painel Comparativo AES, Gráficos de Análise e Arquitetura]
-* **[NOME DO INTEGRANTE 5]:** [INSERIR TAREFAS - Ex: Qualidade de Engenharia, Testes e Documentação Técnica]
+| Integrante / Função | Responsabilidades Principais |
+|---|---|
+| **Lógica Criptográfica & Motor Enigma** | Implementação de `src/core/enigma/` (rotores I-V, refletor, anéis, double-stepping e testes de simetria). |
+| **Interface Imersiva & UX** | Desenvolvimento de `src/ui/` (teclado mecânico, lampboard retroiluminado, plugboard e áudio procedural). |
+| **Protocolo de Rede & QR Code** | Especificação de `src/protocol/` (transporte via QR Code, câmera mobile, validação e fragmentação). |
+| **Criptografia Moderna & Analítica** | Implementação de `src/core/modern/` (AES-GCM, hashing SHA-256, Recharts e detecção de adulteração). |
+| **Qualidade de Engenharia & Documentação** | Configuração do Vitest, isolamento de camadas, governança (AGENTS.md, README.md) e preparação da arguição técnica. |
+
+---
+
+## 6. Qualidade de Engenharia e Arguição Técnica
+
+* **18 Testes Automatizados no Vitest:**
+  * Prova de Simetria Recíproca ($D(E(m)) = m$).
+  * Prova da Propriedade Anti-Reflexiva ($E(x) \neq x$).
+  * Prova de Incoerência de Chave (chave incorreta produz texto ilegível).
+  * Validação Mecânica do *Double-Stepping* do rotor intermediário.
+  * Validação da Tag de Autenticação GHASH (rejeição de 1 bit adulterado no AES-GCM).
+  * Validação de Integridade do Cabeçalho `ENIGMA-NET-v1` e fragmentação.
