@@ -114,4 +114,3 @@ Para garantir os 15% de Qualidade de Engenharia e segurança na Arguição Técn
    * **Chave Incorreta:** Prova automatizada de que chave divergente gera texto ilegível.
    * **Integridade AES-GCM:** Adulteração de 1 único caractere/bit do payload deve disparar rejeição de autenticação (MAC inválido).
 2. **Isolamento de Código:** A suíte de testes deve rodar diretamente sobre `src/core/` e `src/protocol/` sem inicializar o DOM ou renderizadores gráficos.
-
