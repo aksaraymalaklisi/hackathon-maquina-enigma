@@ -290,14 +290,14 @@ export default function App() {
         <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 font-bold font-vintage text-xl shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-              E
+              P
             </div>
             <div>
               <h1 className="text-base sm:text-lg font-bold font-vintage tracking-wider text-amber-400">
-                ENIGMA × CRIPTOGRAFIA MODERNA
+                PARÁBOLA
               </h1>
               <p className="text-[11px] text-zinc-400 font-mono">
-                Desafio 2 • Hackathon Softwares & IoT em Ação • Campus Maricá
+                Comunicação Segura • Enigma M3 × AES-256-GCM
               </p>
             </div>
           </div>
@@ -513,7 +513,7 @@ export default function App() {
 
       {/* Rodapé Informativo */}
       <footer className="border-t border-zinc-800/80 bg-zinc-950/90 py-3 px-4 text-center text-xs text-zinc-500 font-mono">
-        Hackathon Softwares e IoT em Ação 2026 • Desafio 2 (Comunicação Segura: Enigma × Criptografia Moderna) • Arquitetura em 3 Camadas Isoladas
+        Parábola • Sistema de Comunicação Segura Air-Gapped via QR Code & Arquitetura em Três Camadas
       </footer>
     </div>
   )
